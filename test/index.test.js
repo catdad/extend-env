@@ -61,6 +61,4 @@ describe('[env]', function() {
       expect(newEnv).to.have.property(testKey).and.to.equal(testEnv[testKey].toString());
     });
   });
-
-
 });
