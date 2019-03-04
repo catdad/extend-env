@@ -1,24 +1,6 @@
-var path = require('path');
-
 /* jshint node: true */
-function isPlainObject(input) {
-  // https://github.com/sindresorhus/is-plain-obj/blob/master/index.js
-  // adapted by Kiril Vatev for use with earlier versions of node
-  if (Object.prototype.toString.call(input) !== '[object Object]') {
-    return false;
-  }
-
-  var prototype = Object.getPrototypeOf(input);
-  return prototype === null || prototype === Object.getPrototypeOf({});
-}
-
-function isString(input) {
-  return typeof input === 'string';
-}
-
-function filter(arr, func) {
-  return [].filter.call(arr, func);
-}
+var path = require('path');
+var utils = require('./utils.js');
 
 function extendToString(target) {
   var args = [].slice.call(arguments, 1);
@@ -40,7 +22,7 @@ function mergePaths() {
   var mergedPath = [].reduce.call(arguments, function(memo, arg) {
     var p = arg.PATH || arg.Path || arg.path;
 
-    if (!(isString(p) && p.length)) {
+    if (!(utils.isString(p) && p.length)) {
         return memo;
     }
 
@@ -58,14 +40,14 @@ function mergePaths() {
 function newEnv() {
   return extendToString.apply(
     null,
-    [Object.assign({}, process.env)].concat(filter(arguments, isPlainObject))
+    [utils.extend(process.env)].concat(utils.filter(arguments, utils.isPlainObject))
   );
 }
 
 module.exports = function thing () {
-  var args = [].slice.call(arguments);
+  var args = utils.toArray(arguments);
   var mergedPathEnv = mergePaths.apply(null, [process.env].concat(args));
-  var env = newEnv.apply(null, [].concat(args).concat(mergedPathEnv));
+  var env = newEnv.apply(null, args.concat(mergedPathEnv));
 
   delete env.Path;
   delete env.path;
