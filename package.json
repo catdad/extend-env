@@ -2,7 +2,7 @@
   "name": "extend-env",
   "version": "0.0.1",
   "description": "extend-env",
-  "main": "index.js",
+  "main": "src/extend-env.js",
   "scripts": {
     "test": "mocha"
   },
