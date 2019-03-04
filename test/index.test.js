@@ -1,5 +1,5 @@
 /* jshint node: true, mocha: true */
-
+var path = require('path');
 var expect = require('chai').expect;
 
 var lib = require('../');
@@ -59,6 +59,15 @@ describe('[env]', function() {
 
       expect(process.env).to.not.have.property(testKey);
       expect(newEnv).to.have.property(testKey).and.to.equal(testEnv[testKey].toString());
+    });
+  });
+
+  describe('when any variation of path is present', function () {
+    it('merges all of them and returns them only in PATH', function () {
+      var newEnv = lib({ path: 'one' }, { Path: 'two' }, { PATH: 'three' });
+      expect(newEnv.PATH).to.equal([process.env.PATH, 'one', 'two', 'three'].join(path.delimiter));
+      expect(newEnv.Path).to.equal(undefined);
+      expect(newEnv.path).to.equal(undefined);
     });
   });
 });

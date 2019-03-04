@@ -37,7 +37,7 @@ function extendToString(target) {
 }
 
 function mergePaths() {
-  var mergedPath = [].slice.call(arguments).reduce(function(memo, arg) {
+  var mergedPath = [].reduce.call(arguments, function(memo, arg) {
     var p = arg.PATH || arg.Path || arg.path;
 
     if (!(isString(p) && p.length)) {
@@ -62,8 +62,10 @@ function newEnv() {
   );
 }
 
-module.exports = function () {
-  var env = newEnv.apply(null, arguments, mergePaths.apply(null, [process.env].concat(arguments)));
+module.exports = function thing () {
+  var args = [].slice.call(arguments);
+  var mergedPathEnv = mergePaths.apply(null, [process.env].concat(args));
+  var env = newEnv.apply(null, [].concat(args).concat(mergedPathEnv));
 
   delete env.Path;
   delete env.path;
